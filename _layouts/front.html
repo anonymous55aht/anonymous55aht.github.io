@@ -1,0 +1,779 @@
+<html lang="en">
+      
+<style>
+    /* Custom player style */
+    midi-player {
+      display: block;
+      width: inherit;
+      height: 25px;
+      margin: 0 0px 0rem 0px;
+      margin-top: 0;
+    }
+    
+    midi-player::part(control-panel) {
+      background: linear-gradient(#fefefe, #e9e9e9);
+      border: 1px solid #e9e9e9;
+      border-top: none;
+      border-radius: 0px 0px 10px 10px;
+    }
+    
+    midi-visualizer .piano-roll-visualizer {
+      background: #fefefe;
+      border: 1px solid #e9e9e9;
+      border-bottom: none;
+      border-radius: 0px 0px 0 0;
+      margin: 0 0px;
+      margin-bottom: 0;
+      width: inherit;
+      overflow: auto;
+    }
+    
+    midi-visualizer svg {
+          margin: 2px; }
+    
+    midi-visualizer svg rect.note {
+            opacity: calc(min(1, (var(--midi-velocity) + 30) / 128) * 0.75); }
+    
+    midi-visualizer svg rect.note.active {
+      opacity: calc(min(1, (var(--midi-velocity) + 30) / 128) * 0.9);
+      stroke: rgb(0, 0, 0);
+      stroke-width: 1;
+      stroke-opacity: 1; }
+    
+      midi-visualizer svg rect.note[data-program="0"] {
+        fill: #1f77b4; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="8"] {
+        fill: #2ca02c; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="16"] {
+        fill: #ffbb78; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="24"] {
+        fill: #07e1e9; opacity: 20%;}
+    
+      midi-visualizer svg rect.note[data-program="32"] {
+        fill: #9467bd; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="40"] {
+        fill: #8c564b; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="48"] {
+        fill: #e377c2; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="56"] {
+        fill: #ff7f0e; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="64"] {
+        fill: #bcbd22; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="72"] {
+        fill: #17becf; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="80"] {
+        fill: #1b9e77; opacity: 50%;}
+    
+      midi-visualizer svg rect.note[data-program="88"] {
+        fill: #d62728; }
+
+      midi-visualizer svg rect.note[data-program="89"] {
+        fill: #98df8a; opacity: 50%;}
+
+    
+    @import url(https://fonts.googleapis.com/css?family=Lato:400,700,900,300);
+    /* MAKE IT CUTE ----- */
+    .tabs {
+      position: relative;
+      display: flex;
+      min-height: 320;
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
+    }
+  
+    .tabby-tab {
+      flex: 1;
+    }
+  
+    .tabby-tab label {
+      display: block;
+      box-sizing: border-box;
+      /* tab content must clear this */
+        height: 40px;
+      
+      padding: 10px;
+      text-align: center;
+      background: #c8bed4;
+      cursor: pointer;
+    }
+  
+    .tabby-tab label:hover {
+      background: #bea5da;
+    }
+  
+    .tabby-content {
+      position: absolute;
+      left: 0px; bottom: 0; right: 0px;
+      /* clear the tab labels */
+        top: 40px; 
+      padding: 0px;
+      border-radius: 10px 10px 10px 10px;
+      background: #ffffff;
+    }
+  
+    /* MAKE IT WORK ----- */
+    .tabby-tab [type=radio] { display: none; }
+    [type=radio]:checked ~ label {
+      background: #ab81e5;
+      z-index: 2;
+    }
+  
+    [type=radio]:checked ~ label ~ .tabby-content {
+      z-index: 1;
+      /* show/hide */
+        opacity: 1;
+        transform: scale(1);
+    }
+    
+    
+</style>
+
+{% include head.html %}
+
+<body id="page-top">
+  <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                  <a class="page-scroll" href="#page-top">Abstract</a>
+                </li>
+                <li>
+                  <a class="page-scroll" href="#highlight">Highlight</a>
+              </li>
+                <li>
+                    <a class="page-scroll" href="#piano_cover">Piano Cover Generation</a>
+                </li>
+                <li>
+                  <a class="page-scroll" href="">Style Transfer (TBD)</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+  </nav>
+  
+<section class="bg-white">
+  <div class="container no-gutter small-padding" id="abstract">
+    <div class="col-lg-12 text-center">
+        <h2 class="section-heading">Learning Music Style Through Cross-Modal Bootstrapping</h2> 
+        <hr class="primary">
+        <h4 class="section-heading">ISMIR 2025 Submission #320</h4> 
+        <h3></h3>
+    </div>
+    
+    <div class="col-sm-12 no-padding">
+        <p class='text-justify'>
+          <b>Abstract</b>: What is music style? Though often described using text labels such as "swing," "classical," or "emotional," the real style remains implicit and hidden in concrete music examples. In this paper, we introduce a cross-modal framework that learns implicit music styles from raw audio and applies the styles to symbolic music generation. Inspired by BLIP-2, our model uses a Querying Transformer (Q-Former) to extract style representations from an audio LLM and further apply them to condition a symbolic LLM for generating piano arrangements. We adopt a two-stage training strategy: contrastive learning to align style representations with symbolic targets, followed by generative modeling to perform music arrangement. Our model generates piano performances jointly conditioned on a lead sheet (content) and a reference audio example (style), enabling controllable and stylistically faithful arrangement. We demonstrate its effectiveness on piano cover generation and style transfer tasks, achieving improved style-aware audio-to-symbolic coherence and overall music quality.
+        </p>
+
+    </div>
+    
+  </div>
+  
+  <div class="container no-gutter no-padding" id="highlight">  
+    <p class="h3">Highlight</p>
+    
+    <p class='text-justify'>
+      Our model generates piano performances based on a <em>lead sheet</em> (providing melody and chord as <em>content</em>) and a <em>reference audio example</em> (providing <em>style</em>). Below, we demonstrate our model's capability to adapt to diverse, freely manipulated style references. All examples are arranged using the same lead sheet input: an 8-bar excerpt from the musical <em>The Sound of Music</em>, shown below:</p>
+    <div style="text-align: center;">
+      <video width="75%" height="auto" controls>
+        <source src="video/leadsheet.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+      <p><b>An 8-bar lead sheet excerpt from <em>The Sound of Music.</em></b></p>
+    </div>
+
+    <p class='text-justify'>We present three arrangement results, each conditioned on a different reference audio: <em><b>1)</b> The Sound of Music soundtrack</em>, <em><b>2)</b> The Entertainer</em>, a ragtime classic, and <em><b>3)</b> The Girl from Ipanema</em>, a Bossa Nova piece. In each case, the reference audio is shown on the left, and the generated piano arrangement is shown on the right. Click the arrows (<button class="right">&#10095;</button>) to explore and listen to the different stylistic interpretations.</p>
+    
+
+    <div class="container no-gutter no-padding">  
+      <div class="col-sm-1" style="text-align: center;">
+        <button class="left" onclick="plusDivs(-1)">&#10094;</button>
+      </div>
+      <div class="col-sm-1  text-left">
+        <div class="mySlides-page"><p class="text-center">1/3</p></div>
+        <div class="mySlides-page"><p class="text-center">2/3</p></div>
+        <div class="mySlides-page"><p class="text-center">3/3</p></div>
+      </div>
+      <div class="col-sm-1"  style="text-align: center;">
+        <button class="right" onclick="plusDivs(+1)">&#10095;</button>
+      </div>
+      <div class="col-sm-9"></div>
+    </div>
+
+
+    <div class="mySlides">
+      <div class="container no-gutter no-padding">  
+        <div class="col-sm-3 text-center">
+            <div style="justify-content: center">
+              <iframe width="80%" height="auto" style="aspect-ratio: 16/9;" src="https://www.youtube.com/embed/6f0T6UV-HiI?si=x0QMN6HonFB3seg3&amp;start=57" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <p><b>The Original Soundtrack</b></p>
+        </div>
+
+        <div class="col-sm-9 text-center">
+          <video width=100%" height="auto" controls>
+            <source src="video/soundtrack.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <p><b>Piano cover arrangement based on the original sonudtrack</b>.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="mySlides">
+      <div class="container no-gutter no-padding">  
+        <div class="col-sm-3 text-center">
+          <div style="justify-content: center">
+            <iframe width="80%" height="auto" style="aspect-ratio: 16/9;" src="https://www.youtube.com/embed/jKlfNfRZL9I?si=xPHlse13ObDjcY_w&amp;start=11" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <p><b>The Entertainer</b></p>
+          </div>
+        </div>
+
+        <div class="col-sm-9 text-center">
+          <video width=100%" height="auto" controls>
+            <source src="video/ragtime.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <p><b>Piano cover arrangement in the style of Ragtime</b>.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="mySlides">
+      <div class="container no-gutter no-padding">  
+        <div class="col-sm-3 text-center">
+          <div style="justify-content: center">
+            <iframe width="80%" height="auto" style="aspect-ratio: 16/9;" src="https://www.youtube.com/embed/DvA_wDOVD10?si=itujXLWzChpM1yaY&amp;start=12" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <p><b>The Girl from Ipanema</b></p>
+          </div>
+        </div>
+
+        <div class="col-sm-9 text-center">
+          <video width=100%" height="auto" controls>
+            <source src="video/bossanova.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <p><b>Piano cover arrangement in the style of Bossa Nova</b>.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="container no-gutter small-padding">  
+    <p class='text-justify'>
+      In the rest of this page, we will show more arrangement demos. 
+    </p>
+  </div>
+
+
+
+
+    <div class="container no-gutter small-padding" id="piano_cover">  
+      <div class="col-lg-12 text-center"><p class="h1"><hr class="primary"></p></div>
+      <p class="h3">Piano Cover Generation</p>
+      <p class='text-justify'>
+        In this section, we showcase our model's capability in the piano cover generation task. Given an audio clip of a song, our model generates a symbolic piano arrangement that captures the feel from the original audio. We use <a href="https://github.com/chrisdonahue/sheetsage" style="color:blue" target="_blank">Sheetsage</a> to transcribe the lead sheet from audio, making audio the sole input to our model. The demo pieces are drawn from the <a href="https://mtg.upf.edu/ismir2004/contest/tempoContest/node5.html" style="color:blue" target="_blank">Ballroom</a>, <a href="https://staff.aist.go.jp/m.goto/RWC-MDB/rwc-mdb-p.html" style="color:blue" target="_blank">RWC-Pop</a>, and <a href="https://github.com/music-x-lab/POP909-Dataset" style="color:blue" target="_blank">POP909</a> datasets, covering a wide range of genres and instrumentation. We compare our model against three baselines: <em><b>1)</b> <a href="https://github.com/tanchihpin0517/PiCoGen/tree/v2" style="color:blue" target="_blank">PiCoGen2</a></em>, <em><b>2)</b> <a href="https://github.com/ZZWaang/audio2midi" style="color:blue" target="_blank">Audio2MIDI</a></em>, and <em><b>3)</b> a variant of our model w/o pre-training</em>. For each method, we cherry-pick the best result from three generated samples.
+      </p>
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+        <th style="width: 12%;">Demo No.</th>
+        <th class="text-center" style="width: 17%;">Audio Input</th>
+        <th class="text-center" style="width: 17%;">Ours</th>
+        <th class="text-center" style="width: 17%;">PiCoGen2</th>
+        <th class="text-center" style="width: 17%;">Audio2MIDI</th>
+        <th class="text-center" style="width: 17%;">w/o Pre-Training</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#01</b> <em>(J-Pop)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/01/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/01/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/01/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/01/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/01/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#02</b> <em>(Pop)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/02/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/02/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/02/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/02/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/02/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#03</b> <em>(Jazz)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/03/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/03/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/03/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/03/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/03/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#04</b> <em>(Jazz)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/04/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/04/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/04/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/04/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/04/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#05</b> <em>(Rumba)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/05/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/05/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/05/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/05/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/05/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#06</b> <em>(Tango)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/06/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/06/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/06/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/06/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/06/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#07</b> <em>(Jazz)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/07/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/07/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/07/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/07/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/07/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#08</b> <em>(Tango)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/08/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/08/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/08/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/08/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/08/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#09</b> <em>(C-Pop)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/09/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/09/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/09/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/09/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/09/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+          
+          <tr>
+            <td style="vertical-align: middle;">
+              <b>#10</b> <em>(C-Pop)</em>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/10/original.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/10/ours.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/10/picogen2.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/10/a2s.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+            <td>
+              <audio controls style="width: 100%;">
+                <source src="demo/piano_cover/10/ablation.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+              </audio>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+  <div class="container no-gutter small-padding">
+    <p class="h1"><hr class="primary"></p>
+    <h5>This site leverages <a href="https://volny.github.io/creative-theme-jekyll/" style="color:blue" target="_blank">the jekyll template</a> and uses <a href="https://www.bandlab.com/products/cakewalk?lang=en" style="color:blue" target="_blank">Cakewalk</a> for MIDI-to-audio synthesis.</h5>
+  </div>
+
+</section>
+
+{% include scripts.html %}
+
+<script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
+
+
+<script>
+  var slideIndex = 1;
+  
+  showDivs(slideIndex);
+  
+  function plusDivs(n) {
+    showDivs(slideIndex += n);
+  }
+
+  function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length} ;
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  x[slideIndex-1].style.display = "block";
+
+
+  var x = document.getElementsByClassName("mySlides-page");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length} ;
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  x[slideIndex-1].style.display = "block";
+}
+  
+  </script>
+
+<!--<script>
+
+var i_vis;
+var visualizers = document.getElementsByTagName("midi-visualizer")
+for (i_vis = 0; i_vis < visualizers.length; i_vis++) {
+  visualizers[i_vis].config = {
+  noteHeight: 2.5,
+  pixelsPerTimeStep: 20,
+  minPitch: 32,
+  maxPitch: 96,
+  };
+}
+
+
+async function onDomReady() {
+    const players = document.getElementsByTagName('midi-player');
+    const audios = document.getElementsByTagName('audio');
+
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i];
+      const audio = audios[i]
+
+      player.addEventListener('load', function () {
+        const SeekBar = player.shadowRoot.querySelector('.seek-bar');
+        SeekBar.addEventListener('input', function () {
+          audio.pause();
+        });
+        SeekBar.addEventListener('change', function () {
+          audio.currentTime = player.currentTime;
+          if (player.playing)
+          audio.play();
+        });
+      })
+      
+      player.addEventListener('start', function () {
+        audio.currentTime = player.currentTime;
+        audio.play();
+      });
+      player.addEventListener('stop', function () {
+        audio.pause();
+      });
+    }
+}
+document.addEventListener("DOMContentLoaded", onDomReady, false);
+
+
+
+</script>-->
+</body>
+</html>
