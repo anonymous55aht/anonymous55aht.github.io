@@ -1,6 +1,6 @@
 <html lang="en">
       
-<style>
+<!--<style>
     /* Custom player style */
     midi-player {
       display: block;
@@ -135,7 +135,7 @@
     }
     
     
-</style>
+</style>-->
 
 <script type="text/javascript">
   (function(window) {
@@ -167,13 +167,13 @@
           height: 'auto',
           videoId: 'DvA_wDOVD10',
           playerVars: {
-            start: 12,
+            start: 10,
             autoplay: 1,
             mute: 0
           },
           events: {
             'onReady': function (event) {
-              player1.setVolume(40);
+              player1.setVolume(25);
               event.target.playVideo();
             },
           }
