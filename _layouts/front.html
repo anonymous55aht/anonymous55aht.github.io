@@ -137,6 +137,20 @@
     
 </style>
 
+<script type="text/javascript">
+  (function(window) {
+      function setupVideos() {
+          var videos = document.querySelectorAll('#videoElement');
+          videos.forEach(function(v) {
+              v.addEventListener('mouseover', function() { this.controls = true; }, false);
+              v.addEventListener('mouseout', function() { this.controls = false; }, false);
+          });
+      }
+
+      window.addEventListener('load', setupVideos, false);
+  })(window);
+</script>
+
 {% include head.html %}
 
 <body id="page-top">
@@ -187,10 +201,11 @@
     
     <p class='text-justify'>
       Our model generates piano performances based on a <em>lead sheet</em> (providing melody and chord as <em>content</em>) and a <em>reference audio example</em> (providing <em>style</em>). Below, we demonstrate our model's capability to adapt to diverse, freely manipulated style references. All examples are arranged using the same lead sheet input: an 8-bar excerpt from the musical <em>The Sound of Music</em>, shown below:</p>
+
     <div style="text-align: center;">
-      <video width="75%" height="auto" controls>
+      <video id="videoElement" width="75%" height="auto">
         <source src="video/leadsheet.mp4" type="video/mp4">
-      Your browser does not support the video tag.
+        Your browser does not support the video tag.
       </video>
       <p><b>An 8-bar lead sheet excerpt from <em>The Sound of Music.</em></b></p>
     </div>
@@ -223,8 +238,8 @@
             <p><b>The Original Soundtrack</b></p>
         </div>
 
-        <div class="col-sm-9 text-center">
-          <video width=100%" height="auto" controls>
+        <div class="col-sm-9 text-center"">
+          <video id="videoElement" width="100%" height="auto">
             <source src="video/soundtrack.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -244,7 +259,7 @@
         </div>
 
         <div class="col-sm-9 text-center">
-          <video width=100%" height="auto" controls>
+          <video id="videoElement" width="100%" height="auto">
             <source src="video/ragtime.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -264,7 +279,7 @@
         </div>
 
         <div class="col-sm-9 text-center">
-          <video width=100%" height="auto" controls>
+          <video id="videoElement" width="100%" height="auto">
             <source src="video/bossanova.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -665,15 +680,6 @@
           </tr>
         </tbody>
       </table>
-
-
-
-
-
-
-
-
-
 
 
     </div>
