@@ -168,9 +168,9 @@
                 <li>
                     <a class="page-scroll" href="#piano_cover">Piano Cover Generation</a>
                 </li>
-                <li>
-                  <a class="page-scroll" href="">Style Transfer (TBD)</a>
-                </li>
+                <!--<li>
+                  <a class="page-scroll" href="">Style Transfer</a>
+                </li>-->
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -210,7 +210,7 @@
       <p><b>An 8-bar lead sheet excerpt from <em>The Sound of Music.</em></b></p>
     </div>
 
-    <p class='text-justify'>We present three arrangement results, each conditioned on a different reference audio: <em><b>1)</b> The Sound of Music soundtrack</em>, <em><b>2)</b> The Entertainer</em>, a ragtime classic, and <em><b>3)</b> The Girl from Ipanema</em>, a Bossa Nova piece. In each case, the reference audio is shown on the left, and the generated piano arrangement is shown on the right. Click the arrows (<button class="right">&#10095;</button>) to explore and listen to the different stylistic interpretations.</p>
+    <p class='text-justify'>We present two arrangement results, each conditioned on a different reference audio: <em><b>1)</b> The Girl from Ipanema</em>, a Bossa Nova piece, and <em><b>2)</b> The Entertainer</em>, a ragtime classic. In each case, the reference audio is shown on the left, and the generated piano arrangement is shown on the right. Click the arrows (<button class="right">&#10095;</button>) to explore and listen to the different stylistic interpretations.</p>
     
 
     <div class="container no-gutter no-padding">  
@@ -218,9 +218,8 @@
         <button class="left" onclick="plusDivs(-1)">&#10094;</button>
       </div>
       <div class="col-sm-1  text-left">
-        <div class="mySlides-page"><p class="text-center">1/3</p></div>
-        <div class="mySlides-page"><p class="text-center">2/3</p></div>
-        <div class="mySlides-page"><p class="text-center">3/3</p></div>
+        <div class="mySlides-page"><p class="text-center">1/2</p></div>
+        <div class="mySlides-page"><p class="text-center">2/2</p></div>
       </div>
       <div class="col-sm-1"  style="text-align: center;">
         <button class="right" onclick="plusDivs(+1)">&#10095;</button>
@@ -232,18 +231,18 @@
     <div class="mySlides">
       <div class="container no-gutter no-padding">  
         <div class="col-sm-3 text-center">
-            <div style="justify-content: center">
-              <iframe width="80%" height="auto" style="aspect-ratio: 16/9;" src="https://www.youtube.com/embed/6f0T6UV-HiI?si=x0QMN6HonFB3seg3&amp;start=57" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-            <p><b>The Original Soundtrack</b></p>
+          <div style="justify-content: center">
+            <iframe width="80%" height="auto" style="aspect-ratio: 16/9;" src="https://www.youtube.com/embed/DvA_wDOVD10?si=itujXLWzChpM1yaY&amp;start=12" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <p><b>The Girl from Ipanema</b></p>
+          </div>
         </div>
 
-        <div class="col-sm-9 text-center"">
+        <div class="col-sm-9 text-center">
           <video id="videoElement" width="100%" height="auto">
-            <source src="video/soundtrack.mp4" type="video/mp4">
+            <source src="video/bossanova.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-          <p><b>Piano cover arrangement based on the original sonudtrack</b>.</p>
+          <p><b>Piano cover arrangement in the style of Bossa Nova</b>.</p>
         </div>
       </div>
     </div>
@@ -268,26 +267,6 @@
       </div>
     </div>
 
-
-    <div class="mySlides">
-      <div class="container no-gutter no-padding">  
-        <div class="col-sm-3 text-center">
-          <div style="justify-content: center">
-            <iframe width="80%" height="auto" style="aspect-ratio: 16/9;" src="https://www.youtube.com/embed/DvA_wDOVD10?si=itujXLWzChpM1yaY&amp;start=12" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <p><b>The Girl from Ipanema</b></p>
-          </div>
-        </div>
-
-        <div class="col-sm-9 text-center">
-          <video id="videoElement" width="100%" height="auto">
-            <source src="video/bossanova.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <p><b>Piano cover arrangement in the style of Bossa Nova</b>.</p>
-        </div>
-      </div>
-    </div>
-
   </div>
 
 
@@ -304,7 +283,7 @@
       <div class="col-lg-12 text-center"><p class="h1"><hr class="primary"></p></div>
       <p class="h3">Piano Cover Generation</p>
       <p class='text-justify'>
-        In this section, we showcase our model's capability in the piano cover generation task. Given an audio clip of a song, our model generates a symbolic piano arrangement that captures the feel from the original audio. We use <a href="https://github.com/chrisdonahue/sheetsage" style="color:blue" target="_blank">Sheetsage</a> to transcribe the lead sheet from audio, making audio the sole input to our model. The demo pieces are drawn from the <a href="https://mtg.upf.edu/ismir2004/contest/tempoContest/node5.html" style="color:blue" target="_blank">Ballroom</a>, <a href="https://staff.aist.go.jp/m.goto/RWC-MDB/rwc-mdb-p.html" style="color:blue" target="_blank">RWC-Pop</a>, and <a href="https://github.com/music-x-lab/POP909-Dataset" style="color:blue" target="_blank">POP909</a> datasets, covering a wide range of genres and instrumentation. We compare our model against three baselines: <em><b>1)</b> <a href="https://github.com/tanchihpin0517/PiCoGen/tree/v2" style="color:blue" target="_blank">PiCoGen2</a></em>, <em><b>2)</b> <a href="https://github.com/ZZWaang/audio2midi" style="color:blue" target="_blank">Audio2MIDI</a></em>, and <em><b>3)</b> a variant of our model w/o pre-training</em>. For each method, we cherry-pick the best result from three generated samples.
+        In this section, we showcase our model's capability in the piano cover generation task. Given an audio clip of a song, our model generates a symbolic piano arrangement that captures the feel from the original audio. The demo pieces are drawn from the <a href="https://mtg.upf.edu/ismir2004/contest/tempoContest/node5.html" style="color:blue" target="_blank">Ballroom</a>, <a href="https://staff.aist.go.jp/m.goto/RWC-MDB/rwc-mdb-p.html" style="color:blue" target="_blank">RWC-Pop</a>, and <a href="https://github.com/music-x-lab/POP909-Dataset" style="color:blue" target="_blank">POP909</a> datasets, covering a wide range of genres and instrumentation. We compare our model against three baselines: <em><b>1)</b> <a href="https://github.com/tanchihpin0517/PiCoGen/tree/v2" style="color:blue" target="_blank">PiCoGen2</a></em>, <em><b>2)</b> <a href="https://github.com/ZZWaang/audio2midi" style="color:blue" target="_blank">Audio2MIDI</a></em>, and <em><b>3)</b> a variant of our model w/o pre-training</em>. To ensure a fair comparison, the lead sheet input to our model is automatically transcribed by <a href="https://github.com/chrisdonahue/sheetsage" style="color:blue" target="_blank">Sheetsage</a>, making audio the sole input modality for all methods. For each model, we cherry-pick the best result from three generated samples.
       </p>
 
       <table class="table table-bordered">
