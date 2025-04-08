@@ -161,7 +161,8 @@
     <p class="h3">Highlight</p>
     
     <p class='text-justify'>
-      Our model generates piano performances based on a <em>lead sheet</em> (providing melody and chord as <em>content</em>) and a <em>reference audio example</em> (providing <em>style</em>). Below, we demonstrate our model's capability to adapt to diverse, freely manipulated style references. All examples are arranged using the same lead sheet input: an 8-bar excerpt from the musical <em>The Sound of Music</em>, shown below:</p>
+      Our model generates piano performances conditioned on a <em>lead sheet</em> (melody and chords as <em>content</em>) and a <em>reference audio example</em> (providing <em>style</em>). Below, we demonstrate its ability to accommodate diverse, freely manipulated styles to the same content: an 8-bar excerpt from <em>The Sound of Music</em>.
+    </p>
 
     <div style="text-align: center;">
       <video id="videoElement" width="75%" height="auto">
@@ -171,7 +172,9 @@
       <p><b>An 8-bar lead sheet excerpt from <em>The Sound of Music.</em></b></p>
     </div>
 
-    <p class='text-justify'>We present two arrangement results, each conditioned on a different reference audio: <em><b>1)</b> The Girl from Ipanema</em>, a Bossa Nova piece, and <em><b>2)</b> The Entertainer</em>, a ragtime classic. In each case, the reference audio is shown on the left, and the generated piano arrangement is shown on the right. Click the arrows <button class="right">&#10095;</button> to explore and listen to the different stylistic interpretations.</p>
+    <p class='text-justify'>
+      We present two arrangement results, each guided by a different reference audio: one in the style of <em>Bossa Nova</em> and the other <em>Ragtime</em>. In each case, the reference audio is shown on the left and the generated arrangement on the right. Click <button class="right">&#10095;</button> to explore and listen to different stylistic interpretations.
+    </p>
     
 
     <div class="container no-gutter no-padding">  
@@ -203,7 +206,7 @@
             <source src="video/bossanova.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-          <p><b>Piano cover arrangement in the style of Bossa Nova</b>.</p>
+          <p><b>Piano arrangement in the style of Bossa Nova</b>.</p>
         </div>
       </div>
     </div>
@@ -223,7 +226,7 @@
             <source src="video/ragtime.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-          <p><b>Piano cover arrangement in the style of Ragtime</b>.</p>
+          <p><b>Piano arrangement in the style of Ragtime</b>.</p>
         </div>
       </div>
     </div>
@@ -244,7 +247,7 @@
       <div class="col-lg-12 text-center"><p class="h1"><hr class="primary"></p></div>
       <p class="h3">Piano Cover Generation</p>
       <p class='text-justify'>
-        In this section, we showcase our model's capability in the piano cover generation task. Given an audio clip of a song, our model generates a symbolic piano arrangement that captures the feel from the original audio. The demo pieces are drawn from the <a href="https://mtg.upf.edu/ismir2004/contest/tempoContest/node5.html" style="color:blue" target="_blank">Ballroom</a>, <a href="https://staff.aist.go.jp/m.goto/RWC-MDB/rwc-mdb-p.html" style="color:blue" target="_blank">RWC-Pop</a>, and <a href="https://github.com/music-x-lab/POP909-Dataset" style="color:blue" target="_blank">POP909</a> datasets, covering a wide range of genres and instrumentation. We compare our model against three baselines: <em><b>1)</b> <a href="https://github.com/tanchihpin0517/PiCoGen/tree/v2" style="color:blue" target="_blank">PiCoGen2</a></em>, <em><b>2)</b> <a href="https://github.com/ZZWaang/audio2midi" style="color:blue" target="_blank">Audio2MIDI</a></em>, and <em><b>3)</b> a variant of our model w/o pre-training</em>. To ensure a fair comparison, the lead sheet input to our model is automatically transcribed by <a href="https://github.com/chrisdonahue/sheetsage" style="color:blue" target="_blank">Sheetsage</a>, making audio the sole input modality for all methods. For each model, we cherry-pick the best result from three generated samples.
+        When the lead sheet is paired with (or derived from) the audio, the task becomes piano cover generation. In this section, we demonstrate our model's ability to generate symbolic piano covers that capture the feel of the original audio. Demo pieces are drawn from the <a href="https://mtg.upf.edu/ismir2004/contest/tempoContest/node5.html" style="color:blue" target="_blank">Ballroom</a>, <a href="https://staff.aist.go.jp/m.goto/RWC-MDB/rwc-mdb-p.html" style="color:blue" target="_blank">RWC-Pop</a>, and <a href="https://github.com/music-x-lab/POP909-Dataset" style="color:blue" target="_blank">POP909</a> datasets, which span a wide range of genres and instrumentation. We compare our model against three baselines: <em><b>1)</b> <a href="https://github.com/tanchihpin0517/PiCoGen/tree/v2" style="color:blue" target="_blank">PiCoGen2</a></em>, <em><b>2)</b> <a href="https://github.com/ZZWaang/audio2midi" style="color:blue" target="_blank">Audio2MIDI</a></em>, and <em><b>3)</b> a variant of our model w/o pre-training</em>. To ensure a fair comparison, the lead sheet input to our model is automatically transcribed from the audio by <a href="https://github.com/chrisdonahue/sheetsage" style="color:blue" target="_blank">Sheetsage</a>, making audio the sole input modality for all methods. For each model, we cherry-pick the best result out of three generated samples.
       </p>
 
       <table class="table table-bordered">
@@ -630,7 +633,7 @@
       <div class="col-lg-12 text-center"><p class="h1"><hr class="primary"></p></div>
       <p class="h3">Audio-to-Symbolic Style Transfer</p>
       <p class='text-justify'>
-        In this section, we showcase our model's capability in the cross-modal style transfer task. Given a symbolic lead sheet and a reference audio example, our model arranges the lead sheet into a piano performance based on the style from the reference audio. We incorperate reference audio from a diverse range of music genres, including classical and jazz. The demo lead sheets are drawn from the <a href="https://huggingface.co/datasets/sander-wood/wikimusictext" style="color:blue" target="_blank">WikiMT</a> and <a href="https://github.com/music-x-lab/POP909-Dataset" style="color:blue" target="_blank">POP909</a> datasets, which cover both western and eastern contemporary music.  In each example, the reference audio is shown on the left, followed by four piano arrangement results, each generated from a different original lead sheet.
+        When the lead sheet is not paired with the audio, the task becomes cross-modal style transfer. In this case, our model arranges the lead sheet into a piano performance based on the style from the reference audio. In this demo section, We use reference audio from diverse genres, including classical and jazz, and lead sheets from the <a href="https://huggingface.co/datasets/sander-wood/wikimusictext" style="color:blue" target="_blank">WikiMT</a> and <a href="https://github.com/music-x-lab/POP909-Dataset" style="color:blue" target="_blank">POP909</a> datasets, covering both Western and Eastern contemporary music. In each example, the reference audio is shown on the left, followed by four piano arrangements generated from different lead sheets.
       </p>
 
 
@@ -936,7 +939,7 @@
 
   <div class="container no-gutter small-padding">
     <p class="h1"><hr class="primary"></p>
-    <h5>This site leverages <a href="https://volny.github.io/creative-theme-jekyll/" style="color:blue" target="_blank">the jekyll template</a> and uses <a href="https://www.bandlab.com/products/cakewalk?lang=en" style="color:blue" target="_blank">Cakewalk</a> for MIDI-to-audio synthesis.</h5>
+    <h5>Web template from <a href="https://volny.github.io/creative-theme-jekyll/" style="color:blue" target="_blank">https://volny.github.io/creative-theme-jekyll/</a>.</h5>
   </div>
 
 </section>
